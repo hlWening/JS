@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			.loupe {
+				width: 250px;
+				height: 250px;
+			}
+			.small-box {
+				position: relative;
+				width: 100%;
+				height: 100%;
+			}
+			.small-box span {
+				position: absolute;
+				width: 148px;
+				height: 148px;
+				left: 0px;
+				top: 0px;
+				opacity: .3;
+				border: 1px solid #000;
+				background: #fff;
+				cursor: move;
+				z-index: 2;
+				display: none;
+			}
+			.big-box {
+				position: absolute;
+				left: 270px;
+				top: 8px;
+				width: 324px;
+				height: 324px;
+				overflow: hidden;
+				display: none;
+			}
+			.big-box img {
+				position: absolute;
+				left: 0px;
+				top: 0px;
+			}
+		</style>
+		<script>
+			window.onload = function(){
+				var oLoupe = document.querySelector('.loupe');
+				var oSmallbox = oLoupe.querySelector('.small-box');
+				var oMove = oSmallbox.querySelector('span');
+				var oBigbox = oLoupe.querySelector('.big-box');
+				var oImg = oBigbox.querySelector('img');
+				oSmallbox.onmouseover = function(){
+					oMove.style.display = 'block';
+					oBigbox.style.display = 'block';
+				}
+				oSmallbox.onmouseout = function(){
+					oMove.style.display = 'none';
+					oBigbox.style.display = 'none';
+				}
+				oSmallbox.onmousemove = function(e){
+					e = e || event; // e.clientX
+					var l = e.clientX - oMove.offsetWidth/2;
+					var t = e.clientY - oMove.offsetHeight/2;
+					if (l < 0) {
+						l = 0;
+					} else if(l > oSmallbox.offsetWidth - oMove.offsetWidth) {
+						l = oSmallbox.offsetWidth - oMove.offsetWidth;
+					}
+					if (t < 0) {
+						t = 0;
+					} else if(t > oSmallbox.offsetHeight - oMove.offsetHeight) {
+						t = oSmallbox.offsetHeight - oMove.offsetHeight;
+					}
+					oMove.style.left = l + 'px';
+					oMove.style.top = t + 'px';
+					var scaleX = l/(oSmallbox.offsetWidth - oMove.offsetWidth);   //oMove的实时left值在其可能的最大范围(oSmallbox.offsetWidth - oMove.offsetWidth)内的占比
+					var scaleY = t/(oSmallbox.offsetHeight - oMove.offsetHeight);
+					//因为oImg的left及top值相对于oBigbox的定位必须是负值，其计算方式为：
+					//oMove的实时left或者top值在其可能的最大范围内占比 == oImg的实时left或者top值在其可能的最大范围内占比
+					oImg.style.left = -scaleX*(oImg.offsetWidth-oBigbox.offsetWidth) + 'px';
+					oImg.style.top = -scaleY*(oImg.offsetHeight-oBigbox.offsetHeight) + 'px';
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div class="loupe">
+			<div class="small-box">
+				<span></span>
+				<img src="images/small.jpg" alt="" />
+			</div>
+			<div class="big-box">
+				<img src="images/big.jpg" alt="" />
+			</div>
+		</div>
+	</body>
+</html>
