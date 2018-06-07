@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			input {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: -532px;
+				bottom: 0;
+				width: 100px;
+				height: 30px;
+				margin: auto;
+			}
+			.box {
+				width: 600px;
+				height: 400px;
+				border: 1px solid #88282a;
+				position: relative;
+				left: 0;
+				right: 0;
+				top: 100px;
+				bottom: 0;
+				margin: auto;
+			}
+			.box > div {
+				position: absolute;
+				right: 0px;
+				top: -100px;
+				width: 120px;
+				height: 100px;
+				overflow: hidden;
+			}
+			.box > img {
+				position: absolute;
+				left: 0px;
+				top: -24px;
+			}
+			input[type="checkbox"] {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<div class="box">
+			<input type="button" value="开始游戏" />
+			<img src="" alt="" />
+			<div class="grade">
+				<p>得分：0</p>
+				<p>失分：0</p>
+			</div>
+		</div>
+		
+		<script>
+			window.onload = function(){
+				var btn = document.getElementsByTagName('input')[0];
+				var obox = document.querySelector('.box');
+				var oimg = obox.querySelector('img');
+				var ograde = document.querySelector('.grade');
+				var op1 = ograde.children[0];
+				var op2 = ograde.children[1];
+				var qq = {
+					srcrandom: 1, // 随机出现的图片地址
+					leftrandom: 0, // 随机出现的图片的left值
+					topnum: 0, // 图片的top值
+					timer: null, // 设置定时器
+					speed: 200, // 图片下降速度
+					grade: 0, // 记录成绩
+					init: function(){
+						var _this = this;
+						oimg.style.display = 'block';
+						_this.srcrandom = Math.round(Math.random()*11+1); // 取值在1~12
+						_this.leftrandom = Math.round(Math.random()*578); // 取值在0~578
+						btn.value = '游戏进行中...';
+						oimg.src='img/'+ _this.srcrandom +'.png';
+						oimg.style.left = _this.leftrandom +'px';
+						oimg.style.top = _this.topnum +'px';
+						clearInterval(_this.timer);
+						_this.timer = setInterval(function(){
+							if (_this.topnum > 377) {
+								clearInterval(_this.timer);
+								alert('游戏结束');
+								btn.disabled = '';
+								btn.value = '开始游戏';
+								oimg.style.display = 'none';
+							} else {
+								oimg.style.top = _this.topnum +'px';
+								_this.topnum += 10;
+							}
+						}, _this.speed);
+					}
+				};
+				btn.onclick = function(){
+					qq.grade = 0;
+					op1.innerHTML = '得分：'+ qq.grade;
+					qq.topnum = 0;
+					this.disabled = 'disabled';
+					qq.init();
+				}
+				oimg.onmouseover = function(){
+					qq.grade += 5;
+					op1.innerHTML = '得分：'+ qq.grade;
+					qq.topnum = 0;
+					qq.init();
+				}
+			}
+		</script>
+	</body>
+</html>

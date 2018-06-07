@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<title>js之图片上传预览功能-兼容ie10以上</title>
+		<style type="text/css">
+			.img,
+			img {
+				width: 100%;
+				height: auto;
+			}
+
+			#preview {
+				width: 200px;
+				height: 200px;
+				border: 1px solid #000;
+				border-radius: 10px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="preview"></div>
+		<input type="file" onchange="preview(this)" />
+		<script type="text/javascript">
+			function preview(file) {
+				var prevDiv = document.getElementById('preview'),
+					rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
+				console.log('file.files='+file.files);
+				console.log('file.files[0]='+file.files[0]);
+				if(file.files && file.files[0]) {
+					//验证选择的文件是否是图片
+					if (!rFilter.test(file.files[0].type)) {
+						alert("You must select a valid image file!PS：请选择一张图片！");
+						return;
+					}
+					var reader = new FileReader();
+					reader.onload = function(evt) {
+						console.log('evt.target='+evt.target);
+						prevDiv.innerHTML = '<img src="' + evt.target.result + '" />';
+					}
+					reader.readAsDataURL(file.files[0]);
+				} else {
+					prevDiv.innerHTML = '<div class="img" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.value + '\'"></div>';
+				}
+			}
+		</script>
+	</body>
+
+</html>
